@@ -1,4 +1,3 @@
-use colored::Colorize;
 use crossterm::{
     terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode},
     execute,
@@ -22,9 +21,9 @@ pub fn run() -> io::Result<()> {
 
         for (i, name) in entries.iter().enumerate() {
             if i == selected {
-                execute!(stdout, Print(format!("> {}\r\n", name.blue())))?;
+                execute!(stdout, Print(format!("> {}\r\n", name)))?;
             } else {
-                execute!(stdout, Print(format!("  {}\r\n", name.blue())))?;
+                execute!(stdout, Print(format!("  {}\r\n", name)))?;
             }
         }
 
@@ -40,7 +39,7 @@ pub fn run() -> io::Result<()> {
                         selected -= 1;
                     }
                 }
-                KeyCode::Char('l') | KeyCode::Left | KeyCode::Char('q') => {
+                KeyCode::Char('h') | KeyCode::Left | KeyCode::Char('q') => {
                     break;
                 }
 
