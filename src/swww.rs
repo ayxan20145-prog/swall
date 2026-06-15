@@ -1,11 +1,13 @@
+use crate::mode;
+
 use crossterm::{
-    terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode},
-    execute,
     cursor::MoveTo,
-    style::Print,
     event::{self, Event, KeyCode},
+    execute,
+    style::Print,
+    terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode},
 };
-use std::io;
+use std::io::{self, Write};
 
 pub fn run() -> io::Result<()> {
     enable_raw_mode()?;
@@ -14,7 +16,9 @@ pub fn run() -> io::Result<()> {
 
     let mut selected: usize = 0;
 
-    let entries = ["swww", "swaybg"];
+    let entries = ["mode", "name"];
+
+    let mut path = String::new();
 
     loop {
         execute!(stdout, MoveTo(0, 0), Clear(ClearType::All))?;
@@ -39,6 +43,19 @@ pub fn run() -> io::Result<()> {
                         selected -= 1;
                     }
                 }
+                KeyCode::Char('l') | KeyCode::Right | KeyCode::Enter => {
+                    if selected == 0 {
+                        disable_raw_mode()?;
+                        mode::run()?;
+                        enable_raw_mode()?;
+                    } else {
+                        execute!(stdout, Print(format!("Enter the path: ")))?;
+                        io::stdout().flush()?;
+                        disable_raw_mode()?;
+                        io::stdin().read_line(&mut path)?;
+                        enable_raw_mode()?;
+                    }
+                }
                 KeyCode::Char('h') | KeyCode::Left | KeyCode::Char('q') => {
                     break;
                 }
@@ -51,4 +68,3 @@ pub fn run() -> io::Result<()> {
     disable_raw_mode()?;
     Ok(())
 }
-

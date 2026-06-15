@@ -1,8 +1,9 @@
 use std::io;
 
 mod menu;
-mod swww;
+mod mode;
 mod swaybg;
+mod swww;
 
 fn main() -> io::Result<()> {
     menu::run()?;

@@ -1,9 +1,9 @@
 use crossterm::{
-    terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode},
-    execute,
     cursor::MoveTo,
-    style::Print,
     event::{self, Event, KeyCode},
+    execute,
+    style::Print,
+    terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode},
 };
 use std::io;
 
@@ -54,4 +54,3 @@ pub fn run() -> io::Result<String> {
     disable_raw_mode()?;
     Ok(String::new())
 }
-

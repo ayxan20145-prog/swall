@@ -1,11 +1,11 @@
 use crate::{swaybg, swww};
 
 use crossterm::{
-    terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode},
-    execute,
     cursor::MoveTo,
-    style::Print,
     event::{self, Event, KeyCode},
+    execute,
+    style::Print,
+    terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode},
 };
 use std::io;
 
@@ -44,11 +44,11 @@ pub fn run() -> io::Result<()> {
                 KeyCode::Char('l') | KeyCode::Right | KeyCode::Enter => {
                     if selected == 0 {
                         disable_raw_mode()?;
-                        swww::swww::run()?;
+                        swww::run()?;
                         enable_raw_mode()?;
                     } else {
                         disable_raw_mode()?;
-                        swaybg::swaybg::run()?;
+                        swaybg::run()?;
                         enable_raw_mode()?;
                     }
                 }
@@ -64,4 +64,3 @@ pub fn run() -> io::Result<()> {
     disable_raw_mode()?;
     Ok(())
 }
-

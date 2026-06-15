@@ -1,13 +1,14 @@
-use crate::swaybg::mode;
+use crate::mode;
 
 use crossterm::{
-    terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode},
-    execute,
     cursor::MoveTo,
-    style::Print,
     event::{self, Event, KeyCode},
+    execute,
+    style::Print,
+    terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode},
 };
 use std::io::{self, Write};
+use std::process::Command;
 
 pub fn run() -> io::Result<()> {
     enable_raw_mode()?;
@@ -16,9 +17,11 @@ pub fn run() -> io::Result<()> {
 
     let mut selected: usize = 0;
 
-    let entries = ["mode", "name"];
-                        
+    let entries = ["mode", "name", "apply"];
+
     let mut path = String::new();
+    let mut mode = String::new();
+    let mut command = String::new();
 
     loop {
         execute!(stdout, MoveTo(0, 0), Clear(ClearType::All))?;
@@ -46,14 +49,43 @@ pub fn run() -> io::Result<()> {
                 KeyCode::Char('l') | KeyCode::Right | KeyCode::Enter => {
                     if selected == 0 {
                         disable_raw_mode()?;
-                        mode::run()?;
+                        mode = mode::run()?.to_string();
                         enable_raw_mode()?;
-                    } else {
+                    } else if selected == 1 {
                         execute!(stdout, Print(format!("Enter the path: ")))?;
                         io::stdout().flush()?;
                         disable_raw_mode()?;
+                        path.clear();
                         io::stdin().read_line(&mut path)?;
                         enable_raw_mode()?;
+                    } else {
+                        if mode.trim().is_empty() {
+                            command.clear();
+                            command = String::from("swaybg -i ") + path.trim();
+                        } else {
+                            command.clear();
+                            command =
+                                String::from("swaybg -i ") + path.trim() + " -m " + mode.trim();
+                        }
+                        execute!(stdout, Print(format!("Command: {}\r\n\r\n", command)))?;
+
+                        disable_raw_mode()?;
+                        execute!(stdout, Print(format!("Apply? (y/n)")))?;
+                        io::stdout().flush()?;
+                        let mut apply = String::new();
+                        io::stdin().read_line(&mut apply)?;
+                        if apply.trim() == "y" {
+                            Command::new("pkill")
+                                .arg("swaybg")
+                                .status()?;
+
+                            Command::new("sh")
+                                .arg("-c")
+                                .arg(&command)
+                                .spawn()?;
+                        }
+                        enable_raw_mode()?;
+                        break;
                     }
                 }
                 KeyCode::Char('h') | KeyCode::Left | KeyCode::Char('q') => {
