@@ -1,4 +1,4 @@
-use crate::{swaybg, swww};
+use crate::{backends::swaybg::swaybg, backends::swww::swww};
 
 use crossterm::{
     cursor::MoveTo,

@@ -1,4 +1,4 @@
-use crate::mode;
+use crate::backends::swaybg::mode;
 
 use crossterm::{
     cursor::MoveTo,
