@@ -17,7 +17,7 @@ pub fn run() -> io::Result<()> {
 
     let mut selected: usize = 0;
 
-    let entries = ["mode", "name", "apply"];
+    let entries = ["name", "mode", "apply"];
 
     let mut path = String::new();
     let mut mode = String::new();
@@ -48,15 +48,15 @@ pub fn run() -> io::Result<()> {
                 }
                 KeyCode::Char('l') | KeyCode::Right | KeyCode::Enter => {
                     if selected == 0 {
-                        disable_raw_mode()?;
-                        mode = mode::run()?.to_string();
-                        enable_raw_mode()?;
-                    } else if selected == 1 {
                         execute!(stdout, Print(format!("Enter the path: ")))?;
                         io::stdout().flush()?;
                         disable_raw_mode()?;
                         path.clear();
                         io::stdin().read_line(&mut path)?;
+                        enable_raw_mode()?;
+                    } else if selected == 1 {
+                        disable_raw_mode()?;
+                        mode = mode::run()?.to_string();
                         enable_raw_mode()?;
                     } else {
                         if mode.trim().is_empty() {
