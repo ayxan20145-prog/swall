@@ -76,8 +76,11 @@ pub fn run() -> io::Result<()> {
                         io::stdin().read_line(&mut apply)?;
                         if apply.trim() == "y" {
                             Command::new("pkill")
-                                .arg("swaybg")
+                                .arg("swww-daemon")
                                 .status()?;
+
+                            Command::new("swww-daemon")
+                                .spawn()?;
 
                             Command::new("sh")
                                 .arg("-c")
