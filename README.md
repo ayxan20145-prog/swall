@@ -67,7 +67,7 @@ sudo pacman -S swaybg
 Clone the repository and build it:
 
 ```bash
-git clone https://github.com/yourusername/swall.git
+git clone https://github.com/ayxan20145-prog/swall.git
 cd swall
 cargo build --release
 ```
